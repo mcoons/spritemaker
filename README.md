@@ -2,6 +2,9 @@
 
 This is a sprite creation app using vanilla JavaScript and CSS. 
 
+![Sprite Maker](/spritemaker2.png)
+
+
 It is published at https://pixelpaint-81fce.firebaseapp.com/
 
 Options
