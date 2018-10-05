@@ -7,22 +7,10 @@ var currentBrush = 0;           // brush 0 - 2
 var undoArray = [];             // Array to hold undo Object groups
 var scale = 1;                  // Output scale
 var alphaBackground = 1;        // Aplha setting of the background
-// var width = 35;                 // number of pixels on the canvas
-// var height = 35;                // number of pixels on the canvas
-// var pixelSize = 1.4;            // vh
+
 var width = 70;                 // number of pixels on the canvas
 var height = 70;                // number of pixels on the canvas
 var pixelSize = .70;            // in vh
-// var width = 140;                 // number of pixels on the canvas
-// var height = 140;                // number of pixels on the canvas
-// var pixelSize = .35;            // in vh
-
-// var width = 200;                 // number of pixels on the canvas
-// var height = 200;                // number of pixels on the canvas
-// var pixelSize = 49/height; 
-
-// pixelSize =   49 / height 
-
 
 createCanvas(width, height);
 
@@ -54,9 +42,7 @@ function createCanvas(width, height){
 
     main.appendChild(sideBar);
     document.getElementsByTagName("body")[0].appendChild(main);
-    // document.getElementByTagName("body").appendChild(main);
     document.getElementById("fileChooserLabel").setAttribute("for","fileChooser");
-    
     
     createPixels();
     alphaChange();
@@ -72,7 +58,6 @@ function setHeader(){
 function createPixels(){
 
     let paintArea = document.getElementById("paintArea");
-    // paintArea.childNodes.forEach( c => {paintArea.removeChild(c)});
     while (paintArea.hasChildNodes()) {
         paintArea.removeChild(paintArea.lastChild);
     }
@@ -81,7 +66,6 @@ function createPixels(){
         let rowDiv = createElement({tagName: "div", id: "row"+h, classes: ["row"]});
         for ( let w = 0; w < width; w++ ){
             let pixelDiv = createElement({tagName: "div", id: w+","+h,  events: [{type: "click", fn: paintPixel}, {type: "mouseover", fn: mouseOver}], classes: ["pixel", "outlined", "background"]});
-            // let pixelDiv = createElement({tagName: "div", id: `${w},${h}`, events: [{type: "click", fn: paintPixel}, {type: "mouseover", fn: mouseOver}], classes: ["pixel", "outlined", "background"]});
             pixelDiv.style.background = backgroundColor;    
             pixelDiv.style.width = pixelSize+'vw';
             pixelDiv.style.height = pixelSize+'vw',   
@@ -96,11 +80,7 @@ function createPixels(){
 function createPalette(){
     let paletteDiv = createElement( {tagName: "div", id: "paletteDiv"} );
     let paletteHolder = createElement( {tagName: "div", id: "paletteHolder"} );
-    // for ( let index = 0; index < colors.length; index++ ){
-    //     let colorDiv = createElement({tagName: "div", id: "color"+index, events: [{type: "click", fn: selectColor}], classes: ["colorDiv"]});
-    //     colorDiv.style.backgroundColor = colors[index];
-    //     paletteHolder.appendChild(colorDiv);
-    // }
+
     colors.forEach( (color, index) => {
         let colorDiv = createElement({tagName: "div", id: "color"+index, events: [{type: "click", fn: selectColor}], classes: ["colorDiv"]});
         colorDiv.style.backgroundColor = color;
@@ -169,7 +149,6 @@ function clearScreen(event){
     let undoObj = {};
     document.querySelectorAll("#paintArea .painted").forEach( element => {         
         undoObj[element.id] = {color: element.style.backgroundColor, classes: element.classList.value.replace(" selected","")}; 
-        // element.style.backgroundColor = backgroundColor.replace(")", "," + alphaBackground + ")");
         element.style.backgroundColor = backgroundColor.replace(")", `,${alphaBackground})`);
         element.classList.remove("painted");
         element.classList.add("background");
@@ -193,7 +172,6 @@ function applyColor(pixel){
     let neighbors = findNearNeighbors(pixel, currentBrush);
     updateUnDo(neighbors);
     neighbors.forEach( n => { 
-        //        n.style.backgroundColor = erasing ? backgroundColor.replace(")", "," + alphaBackground + ")") : currentColor;
         n.style.backgroundColor = erasing ? backgroundColor.replace(")",  `,${alphaBackground})` ) : currentColor;
         if (!erasing){
             n.classList.remove("background"); 
@@ -235,7 +213,6 @@ function unDoAll(event){
 
 function resetUnDoGroup(group){
     for ( let key in group ){ 
-        // document.getElementById(key).style.background = group[key]["classes"].includes("background") ? backgroundColor.replace(")", "," + alphaBackground + ")") : group[key]["color"];
         document.getElementById(key).style.background = group[key]["classes"].includes("background") ? backgroundColor.replace(")", `,${alphaBackground})` ) : group[key]["color"];
         document.getElementById(key).classList = group[key]["classes"]; 
     }
@@ -264,7 +241,6 @@ function findNearNeighbors(pixel, distance){
     else{
         for ( let yDelta = -distance; yDelta <= distance; yDelta++ ){
             for ( let xDelta = -distance; xDelta <= distance; xDelta++ ){
-                // let possibleNeighbor = document.getElementById((currentPixelX + xDelta) + "," + (currentPixelY + yDelta));
                 let possibleNeighbor = document.getElementById( `${currentPixelX + xDelta},${currentPixelY + yDelta}` );
                 if (possibleNeighbor){ 
                     neighborList.push(possibleNeighbor); 
@@ -329,12 +305,10 @@ function spriteToPixels(){
     for (let y = 0; y < canvas.height; y++){
         for (let x = 0; x < canvas.width; x++){
             let pixelData=ctx.getImageData(x,y,1,1);
-            // console.log(pixelData.data);
             let red = pixelData.data[0];
             let green = pixelData.data[1];
             let blue = pixelData.data[2];
             let alpha = pixelData.data[3];
-            // let currentPixel = document.getElementById(x+","+y);
             let currentPixel = document.getElementById( `${x},${y}` );
             currentPixel.style.backgroundColor =  `rgba(${red}, ${green}, ${blue}, ${alpha})` ;
             currentPixel.classList.add("pixel");
@@ -377,13 +351,6 @@ function circle (center,radius,step){
     }
     return pixelArray;
 }
-
-
-// for (let index = 4; index < colors.length-3; index++) {
-//     currentColor =  colors[index];
-//     console.log(currentColor);
-//     circle(document.getElementById("60,60"),index-3, .1).forEach( p => {applyColor(document.getElementById(p));});
-// }
 
 function createElement(elementInfo){
     if (!elementInfo.tagName){
